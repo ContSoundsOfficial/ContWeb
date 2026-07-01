@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ContSound</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --accent:#14151c;
+  --accent-dim:#f0f1f4;
+  --bg:#f2f3f6;
+  --surface:#ffffff;
+  --border:#14151c;
+  --text:#14151c;
+  --text-dim:#6b7080;
+  --shadow:4px 4px 0 var(--border);
+  --shadow-lg:6px 6px 0 var(--border);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  background:var(--bg);
+  background-image:
+    linear-gradient(rgba(20,21,28,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20,21,28,.06) 1px, transparent 1px);
+  background-size:32px 32px;
+  color:var(--text);
+  min-height:100vh;
+}
+h1,h2,h3{font-family:'Space Grotesk','Inter',sans-serif}
+header{
+  padding:16px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:var(--surface);
+  border-bottom:2px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:10;
+  gap:16px;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px;font-size:20px;font-family:'Space Grotesk',sans-serif}
+.brand .dot{width:12px;height:12px;border-radius:4px;background:var(--accent);border:2px solid var(--border)}
+.nav-links{display:flex;gap:28px;font-size:13px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px}
+.nav-links a{color:inherit;text-decoration:none;cursor:pointer}
+.nav-links a:hover{color:var(--text)}
+.header-right{display:flex;align-items:center;gap:14px}
+input{
+  padding:10px 16px;
+  border-radius:12px;
+  border:2px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  width:220px;
+  outline:none;
+  font-size:14px;
+  font-family:inherit;
+}
+input:focus{box-shadow:var(--shadow)}
+.account-pill{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface);border:2px solid var(--border);
+  padding:6px 14px 6px 6px;border-radius:999px;font-size:13px;font-weight:700;
+  cursor:default;
+}
+.account-pill .avatar{
+  width:26px;height:26px;border-radius:50%;background:var(--accent);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:12px;flex-shrink:0;overflow:hidden;border:2px solid var(--border);
+}
+.account-pill .avatar img{width:100%;height:100%;object-fit:cover}
+.account-pill .signout{color:var(--text-dim);cursor:pointer;text-decoration:underline;font-weight:600}
+.account-pill .signout:hover{color:var(--text)}
+.btn-outline{
+  padding:9px 20px;border-radius:12px;border:2px solid var(--border);
+  background:var(--surface);color:var(--text);font-weight:700;font-size:13px;cursor:pointer;
+  text-transform:uppercase;letter-spacing:.4px;box-shadow:var(--shadow);
+  transition:transform .12s ease,box-shadow .12s ease;
+}
+.btn-outline:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow-lg)}
+.btn-outline:active{transform:translate(0,0);box-shadow:2px 2px 0 var(--border)}
+.hero{text-align:center;max-width:700px;margin:64px auto 8px;padding:0 24px}
+.hero .eyebrow{
+  display:inline-block;color:var(--text);font-size:12px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;background:var(--accent-dim);border:2px solid var(--border);
+  padding:5px 14px;border-radius:999px;
+}
+.hero h1{font-size:clamp(28px,5vw,48px);line-height:1.1;margin:18px 0 14px;font-weight:800}
+.hero p{color:var(--text-dim);font-size:16px;line-height:1.6}
+.grid{display:flex;justify-content:center;padding:48px 24px 100px}
+.card{
+  width:min(500px,100%);
+  background:var(--surface);
+  border:2px solid var(--border);
+  border-radius:20px;
+  overflow:hidden;
+  cursor:pointer;
+  box-shadow:var(--shadow-lg);
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.card:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--border)}
+.thumb{
+  height:220px;
+  position:relative;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.6),transparent 45%),
+    linear-gradient(135deg,#e4e6ec,#d3d6de 55%,#bfc3cf);
+  border-bottom:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.waveform{display:flex;align-items:flex-end;gap:4px}
+.waveform span{width:5px;border-radius:3px;background:var(--border);opacity:.85;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+.info{padding:26px 28px 28px}
+.info h2{margin:0 0 6px;font-size:24px;font-weight:800}
+.info p.tagline{color:var(--text-dim);font-size:14px;margin:0 0 18px}
+.stats{display:flex;align-items:center;gap:18px;color:var(--text-dim);font-size:12px;font-weight:600;flex-wrap:wrap;margin-bottom:20px;text-transform:uppercase;letter-spacing:.3px}
+.stats strong{color:var(--text);font-variant-numeric:tabular-nums;font-family:'Space Grotesk',sans-serif}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--accent-dim);border:2px solid var(--border);color:var(--text);font-size:12px;font-weight:700}
+button{
+  padding:13px 26px;
+  border:2px solid var(--border);
+  border-radius:12px;
+  background:var(--border);
+  color:#fff;
+  font-weight:700;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  font-family:inherit;
+  transition:transform .12s ease,box-shadow .12s ease;
+}
+button:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow-lg)}
+button:active{transform:translate(0,0);box-shadow:2px 2px 0 var(--border)}
+button:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+footer{text-align:center;padding:40px 24px 60px;color:var(--text-dim);font-size:13px}
+
+/* Modal shared */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(20,21,28,.5);
+  display:none;align-items:center;justify-content:center;z-index:100;padding:24px;
+}
+.modal-overlay.open{display:flex}
+.box{width:min(640px,100%);max-height:88vh;overflow-y:auto;background:var(--surface);border:2px solid var(--border);border-radius:20px;padding:28px;box-shadow:8px 8px 0 var(--border)}
+.box.narrow{width:min(400px,100%)}
+.close{float:right;cursor:pointer;color:var(--text-dim);font-size:18px;font-weight:700}
+.close:hover{color:var(--text)}
+.gallery{
+  height:220px;border-radius:14px;margin:16px 0;
+  background:
+    radial-gradient(circle at 25% 20%,rgba(255,255,255,.6),transparent 45%),
+    linear-gradient(135deg,#e4e6ec,#d3d6de 55%,#bfc3cf);
+  border:2px solid var(--border);
+}
+ul{color:var(--text-dim);line-height:1.9;font-size:14px}
+
+/* Auth modal */
+.auth-tabs{display:flex;gap:6px;margin:18px 0 20px;background:var(--bg);border:2px solid var(--border);border-radius:14px;padding:4px}
+.auth-tab{flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;color:var(--text-dim);text-transform:uppercase;letter-spacing:.4px}
+.auth-tab.active{background:var(--accent);color:#fff}
+.auth-panel{display:none}
+.auth-panel.active{display:block}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.field input{width:100%}
+.auth-error{color:#d6304a;font-size:13px;margin:-6px 0 14px;min-height:1em;font-weight:600}
+.switch-line{font-size:13px;color:var(--text-dim);margin-top:14px;text-align:center}
+.switch-line a{color:var(--accent);text-decoration:none;font-weight:700;cursor:pointer}
+
+/* Reviews */
+.reviews-section{margin-top:28px;border-top:2px solid var(--border);padding-top:22px}
+.reviews-section h3{margin:0 0 14px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-dim)}
+.star-picker{display:flex;gap:4px;margin-bottom:12px}
+.star-picker span{font-size:26px;cursor:pointer;color:#d5d8e0;transition:color .15s ease}
+.star-picker span.filled{color:var(--accent)}
+.review-form textarea{
+  width:100%;min-height:80px;padding:12px 14px;border-radius:12px;
+  border:2px solid var(--border);background:var(--surface);color:var(--text);
+  font-family:inherit;font-size:14px;resize:vertical;outline:none;margin-bottom:12px;
+}
+.review-form textarea:focus{box-shadow:var(--shadow)}
+.review-locked{
+  background:var(--bg);border:2px dashed var(--border);border-radius:16px;
+  padding:24px 16px;font-size:13px;color:var(--text-dim);text-align:center;
+}
+.review-locked .lock-icon{
+  width:44px;height:44px;border-radius:50%;background:var(--accent-dim);border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:18px;
+}
+.review-locked a{color:var(--accent);cursor:pointer;font-weight:700;text-decoration:none}
+.review-list{margin-top:18px;display:flex;flex-direction:column;gap:14px}
+.review-item{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:3px 3px 0 var(--border)}
+.review-item .r-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.review-item .r-name{font-weight:700;font-size:13px}
+.review-item .r-date{font-size:11px;color:var(--text-dim)}
+.review-item .r-stars{color:var(--accent);font-size:13px;margin-bottom:6px}
+.review-item .r-text{font-size:13px;color:var(--text-dim);line-height:1.6}
+.no-reviews{color:var(--text-dim);font-size:13px;text-align:center;padding:10px 0}
+
+@media (max-width:700px){
+  header{padding:14px 18px;flex-wrap:wrap}
+  .nav-links{display:none}
+  input{width:150px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand"><span class="dot"></span> CONTSOUND</div>
+  <div class="nav-links">
+    <a onclick="document.body.scrollIntoView({behavior:'smooth',block:'start'})">Home</a>
+    <a onclick="document.querySelector('.grid').scrollIntoView({behavior:'smooth',block:'center'})">Downloads</a>
+    <a onclick="document.querySelector('.hero').scrollIntoView({behavior:'smooth',block:'start'})">About</a>
+  </div>
+  <div class="header-right">
+    <input placeholder="Search ContSound..." autocomplete="off">
+    <div id="authArea"></div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Studio-Grade Typing Audio</div>
+  <h1>addons that work both for controller and keyboard!</h1>
+  <p>ContSound layers realistic mechanical-keyboard acoustics onto any keyboard, tuned for ultra low latency and zero fatigue during long sessions.</p>
+</section>
+
+<div class="grid">
+  <div class="card" onclick="openModal()">
+    <div class="thumb">
+      <div class="waveform">
+        <span style="height:18px;animation-delay:0s"></span>
+        <span style="height:34px;animation-delay:.1s"></span>
+        <span style="height:26px;animation-delay:.2s"></span>
+        <span style="height:44px;animation-delay:.3s"></span>
+        <span style="height:20px;animation-delay:.4s"></span>
+        <span style="height:38px;animation-delay:.5s"></span>
+        <span style="height:16px;animation-delay:.6s"></span>
+      </div>
+    </div>
+    <div class="info">
+      <h2>ContSound</h2>
+      <p class="tagline">Premium keyboard audio engine with 40+ sound packs and ultra low latency.</p>
+      <div class="stats">
+        <span class="pill" id="ratingPill">Rating —</span>
+        <span>v2.4.1</span>
+        <span><strong id="downloads">0</strong> Downloads</span>
+        <span><strong id="views">0</strong> Views</span>
+      </div>
+      <button onclick="event.stopPropagation();openModal()">View Project</button>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 ContSound. All rights reserved.</footer>
+
+<!-- Project modal -->
+<div id="modal" class="modal-overlay">
+  <div class="box">
+    <span class="close" onclick="closeModal()">✕</span>
+    <h1>ContSound</h1>
+    <div class="gallery"></div>
+    <p style="color:var(--text-dim);line-height:1.7">
+      Professional keyboard sound engine with custom profiles, ultra low latency audio, and
+      high-quality sound packs.
+    </p>
+    <ul>
+      <li>40+ Sound Packs</li>
+      <li>Ultra Low Latency</li>
+      <li>Custom Profiles</li>
+      <li>Add Custom Sounds</li>
+    </ul>
+    <p><b>Downloads:</b> <span id="downloads2">0</span></p>
+    <button onclick="downloadNow()">Download</button>
+
+    <div class="reviews-section">
+      <h3>Reviews</h3>
+      <div id="reviewFormArea"></div>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Auth modal -->
+<div id="authModal" class="modal-overlay">
+  <div class="box narrow">
+    <span class="close" onclick="closeAuthModal()">✕</span>
+    <h2 style="margin-top:0">Welcome</h2>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Sign In</div>
+      <div class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Create Account</div>
+    </div>
+
+    <div class="auth-panel active" id="panelLogin">
+      <div class="field">
+        <label>Email or Username</label>
+        <input type="text" id="loginUsername" placeholder="you@gmail.com" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPassword" autocomplete="current-password">
+      </div>
+      <div class="auth-error" id="loginError"></div>
+      <button style="width:100%" onclick="handleLogin()">Sign In</button>
+    </div>
+
+    <div class="auth-panel" id="panelRegister">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="regEmail" placeholder="you@gmail.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="regUsername" placeholder="Shown on your reviews" autocomplete="nickname">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="regPassword" autocomplete="new-password">
+      </div>
+      <div class="auth-error" id="regError"></div>
+      <button style="width:100%" onclick="handleRegister()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- storage keys ---------- */
+const LS_DOWNLOADS = "cs_downloads";
+const LS_VIEWS = "cs_views";
+const LS_REVIEWS = "cs_reviews";
+const LS_USERS = "cs_users";
+const LS_SESSION = "cs_session";
+
+/* =========================================================================
+   SHARED BACKEND (Firebase Firestore)
+   localStorage only lives in ONE browser — that's why reviews/downloads
+   weren't showing up for other visitors. To make counts and reviews shared
+   across everyone who visits the site:
+     1. Go to https://console.firebase.google.com and create a free project.
+     2. In the project, click "Build > Firestore Database" > Create database
+        (start in test mode is fine to get going).
+     3. Go to Project Settings > General > "Your apps" > add a Web app.
+        Copy the config object it gives you into FIREBASE_CONFIG below.
+   Until you do that, this page falls back to per-browser localStorage, so
+   it still works for local testing but won't sync between visitors.
+   ========================================================================= */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCRfuEK5rt2KWwtd959Vch0T3eaD4fNFJ8",
+  authDomain: "cont-3b796.firebaseapp.com",
+  projectId: "cont-3b796",
+  storageBucket: "cont-3b796.firebasestorage.app",
+  messagingSenderId: "130387612791",
+  appId: "1:130387612791:web:913d6df45222e62a5a2272"
+};
+const FIREBASE_ENABLED = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY";
+let fb = null; // holds { setDoc, increment, addDoc, statsDocRef, reviewsCollRef } once loaded
+
+async function initFirebase(){
+  if(!FIREBASE_ENABLED) return;
+  try{
+    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+    const { getFirestore, doc, onSnapshot, setDoc, increment, collection, addDoc, query, orderBy } =
+      await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+
+    const app = initializeApp(FIREBASE_CONFIG);
+    const db = getFirestore(app);
+    const statsDocRef = doc(db, "contsound", "stats");
+    const reviewsCollRef = collection(db, "contsound_reviews");
+
+    onSnapshot(statsDocRef, snap => {
+      const data = snap.exists() ? snap.data() : { downloads: 0, views: 0 };
+      downloads = data.downloads || 0;
+      views = data.views || 0;
+      renderCounters();
+    });
+
+    const q = query(reviewsCollRef, orderBy("date", "desc"));
+    onSnapshot(q, snap => {
+      reviews = snap.docs.map(d => d.data());
+      renderReviewList();
+      renderCounters();
+    });
+
+    fb = { setDoc, increment, addDoc, statsDocRef, reviewsCollRef };
+  } catch(err){
+    console.error("Firebase failed to load, falling back to local storage:", err);
+    fb = null;
+  }
+}
+
+/* ---------- state ---------- */
+let downloads = parseInt(localStorage.getItem(LS_DOWNLOADS) || "0", 10);
+let views = parseInt(localStorage.getItem(LS_VIEWS) || "0", 10);
+let reviews = JSON.parse(localStorage.getItem(LS_REVIEWS) || "[]");
+let currentUser = JSON.parse(localStorage.getItem(LS_SESSION) || "null");
+let selectedStars = 0;
+
+/* ---------- counters ---------- */
+function saveCounters(){
+  localStorage.setItem(LS_DOWNLOADS, downloads);
+  localStorage.setItem(LS_VIEWS, views);
+}
+function renderCounters(){
+  document.getElementById('downloads').textContent = downloads.toLocaleString();
+  document.getElementById('downloads2').textContent = downloads.toLocaleString();
+  document.getElementById('views').textContent = views.toLocaleString();
+  const pill = document.getElementById('ratingPill');
+  if(reviews.length){
+    const avg = reviews.reduce((s,r)=>s+r.stars,0) / reviews.length;
+    pill.textContent = `Rating ${avg.toFixed(1)}/5`;
+  } else {
+    pill.textContent = `Rating —`;
+  }
+}
+async function registerView(){
+  if(fb){
+    await fb.setDoc(fb.statsDocRef, { views: fb.increment(1) }, { merge: true });
+  } else {
+    views += 1;
+    saveCounters();
+    renderCounters();
+  }
+}
+async function downloadNow(){
+  if(fb){
+    await fb.setDoc(fb.statsDocRef, { downloads: fb.increment(1) }, { merge: true });
+  } else {
+    downloads += 1;
+    saveCounters();
+    renderCounters();
+  }
+  window.open("https://drive.google.com/file/d/13dK3Z6690-Qu80o4AucONr9Ca-OVWMTU/view?usp=sharing", "_blank");
+}
+
+/* ---------- project modal ---------- */
+function openModal(){
+  document.getElementById('modal').classList.add('open');
+  renderReviews();
+}
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+
+/* ---------- auth modal ---------- */
+function openAuthModal(){
+  document.getElementById('authModal').classList.add('open');
+  document.getElementById('loginError').textContent = "";
+  document.getElementById('regError').textContent = "";
+}
+function closeAuthModal(){ document.getElementById('authModal').classList.remove('open'); }
+function switchAuthTab(tab){
+  document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('tabRegister').classList.toggle('active', tab==='register');
+  document.getElementById('panelLogin').classList.toggle('active', tab==='login');
+  document.getElementById('panelRegister').classList.toggle('active', tab==='register');
+}
+
+/* ---------- username/password (client-side only, localStorage) ----------
+   NOTE: There's no backend here, so this is NOT secure real authentication —
+   it's a local-only account store for this browser. Fine for a personal
+   project page, not for anything that needs real security. */
+function getUsers(){ return JSON.parse(localStorage.getItem(LS_USERS) || "{}"); }
+function saveUsers(u){ localStorage.setItem(LS_USERS, JSON.stringify(u)); }
+
+function isEmail(str){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str); }
+
+function handleRegister(){
+  const email = document.getElementById('regEmail').value.trim();
+  const username = document.getElementById('regUsername').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const errEl = document.getElementById('regError');
+  errEl.textContent = "";
+  if(!email || !username || !password){ errEl.textContent = "Enter an email, username, and password."; return; }
+  if(!isEmail(email)){ errEl.textContent = "Enter a valid email address (Gmail or any other)."; return; }
+  if(password.length < 4){ errEl.textContent = "Password must be at least 4 characters."; return; }
+  const users = getUsers();
+  const key = email.toLowerCase();
+  if(users[key]){ errEl.textContent = "An account with that email already exists."; return; }
+  const usernameTaken = Object.values(users).some(u => u.username.toLowerCase() === username.toLowerCase());
+  if(usernameTaken){ errEl.textContent = "That username is already taken."; return; }
+  users[key] = { email, username, password };
+  saveUsers(users);
+  loginAs({ type: "local", username, email });
+}
+
+function handleLogin(){
+  const input = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  errEl.textContent = "";
+  const users = getUsers();
+  // allow login by email OR by matching display name, for accounts created either way
+  let rec = users[input.toLowerCase()];
+  if(!rec){
+    rec = Object.values(users).find(u => u.username && u.username.toLowerCase() === input.toLowerCase());
+  }
+  if(!rec || rec.password !== password){ errEl.textContent = "Incorrect email/username or password."; return; }
+  loginAs({ type: "local", username: rec.username, email: rec.email });
+}
+
+/* ---------- session ---------- */
+function loginAs(user){
+  currentUser = user;
+  localStorage.setItem(LS_SESSION, JSON.stringify(user));
+  closeAuthModal();
+  renderAuthArea();
+  renderReviews();
+}
+function signOut(){
+  currentUser = null;
+  localStorage.removeItem(LS_SESSION);
+  renderAuthArea();
+  renderReviews();
+}
+function renderAuthArea(){
+  const area = document.getElementById('authArea');
+  if(currentUser){
+    const initial = currentUser.username.charAt(0).toUpperCase();
+    const avatar = currentUser.picture
+      ? `<img src="${currentUser.picture}" alt="">`
+      : initial;
+    area.innerHTML = `
+      <div class="account-pill">
+        <span class="avatar">${avatar}</span>
+        <span>${currentUser.username}</span>
+        <span class="signout" onclick="signOut()">Sign out</span>
+      </div>`;
+  } else {
+    area.innerHTML = `<button class="btn-outline" onclick="openAuthModal()">Sign In</button>`;
+  }
+}
+
+/* ---------- reviews ---------- */
+function saveReviews(){ localStorage.setItem(LS_REVIEWS, JSON.stringify(reviews)); }
+
+function renderReviews(){
+  renderReviewForm();
+  renderReviewList();
+  renderCounters();
+}
+
+function renderReviewForm(){
+  const formArea = document.getElementById('reviewFormArea');
+  if(currentUser){
+    formArea.innerHTML = `
+      <div class="review-form">
+        <div class="star-picker" id="starPicker"></div>
+        <textarea id="reviewText" placeholder="What do you think of ContSound?"></textarea>
+        <button onclick="submitReview()">Post Review</button>
+      </div>`;
+    buildStarPicker();
+  } else {
+    formArea.innerHTML = `
+      <div class="review-locked">
+        <div class="lock-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div style="font-weight:700;color:var(--text);margin-bottom:2px">Sign in required</div>
+        <a onclick="openAuthModal()">Sign in</a> to leave a star rating and review.
+      </div>`;
+  }
+}
+
+function renderReviewList(){
+  const list = document.getElementById('reviewList');
+  if(!list) return; // modal not open yet
+  if(!reviews.length){
+    list.innerHTML = `<div class="no-reviews">No reviews yet — be the first.</div>`;
+    return;
+  }
+  const sorted = fb ? reviews : reviews.slice().reverse();
+  list.innerHTML = sorted.map(r => `
+    <div class="review-item">
+      <div class="r-head">
+        <span class="r-name">${escapeHtml(r.username)}</span>
+        <span class="r-date">${new Date(r.date).toLocaleDateString()}</span>
+      </div>
+      <div class="r-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+      <div class="r-text">${escapeHtml(r.text)}</div>
+    </div>
+  `).join('');
+}
+
+function buildStarPicker(){
+  selectedStars = 0;
+  const picker = document.getElementById('starPicker');
+  picker.innerHTML = "";
+  for(let i=1;i<=5;i++){
+    const s = document.createElement('span');
+    s.textContent = "★";
+    s.dataset.value = i;
+    s.onclick = () => { selectedStars = i; paintStars(); };
+    picker.appendChild(s);
+  }
+  paintStars();
+}
+function paintStars(){
+  document.querySelectorAll('#starPicker span').forEach(s => {
+    s.classList.toggle('filled', parseInt(s.dataset.value,10) <= selectedStars);
+  });
+}
+async function submitReview(){
+  const text = document.getElementById('reviewText').value.trim();
+  if(!selectedStars){ alert("Pick a star rating first."); return; }
+  if(!text){ alert("Write a short review first."); return; }
+  const review = {
+    username: currentUser.username,
+    stars: selectedStars,
+    text,
+    date: Date.now()
+  };
+  if(fb){
+    await fb.addDoc(fb.reviewsCollRef, review);
+    // list re-renders automatically via onSnapshot
+    document.getElementById('reviewText').value = "";
+    buildStarPicker();
+  } else {
+    reviews.push(review);
+    saveReviews();
+    renderReviews();
+  }
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ---------- init ---------- */
+renderCounters();
+renderAuthArea();
+initFirebase().then(() => {
+  registerView();
+});
+
+</script>
+</body>
+</html>
